@@ -1,0 +1,190 @@
+# 1 data loading and first analysis
+airquality <- read.csv("airquality.csv")
+str(airquality)
+summary(airquality)
+
+# 2 missed values
+colSums(is.na(airquality))
+airquality$Ozone[is.na(airquality$Ozone)] <- mean(airquality$Ozone, na.rm = TRUE)
+airquality$Solar.R[is.na(airquality$Solar.R)] <- mean(airquality$Solar.R, na.rm = TRUE)
+airquality$Wind[is.na(airquality$Wind)] <- mean(airquality$Wind, na.rm = TRUE)
+airquality$Temp[is.na(airquality$Temp)] <- mean(airquality$Temp, na.rm = TRUE)
+sum(is.na(airquality))
+
+# 3 outliers finding
+par(mfrow = c(2, 2))
+boxplot(airquality$Ozone, main = "Boxplot for Ozone")
+boxplot(airquality$Solar.R, main = "Boxplot for Solar.R")
+boxplot(airquality$Wind, main = "Boxplot for Wind")
+boxplot(airquality$Temp, main = "Boxplot for Temp")
+par(mfrow = c(1, 1))
+
+
+# outlires removing
+remove_outliers <- function(y) {
+  A <- quantile(y, 0.25, na.rm = TRUE)
+  B <- quantile(y, 0.75, na.rm = TRUE)
+  spread <- B - A
+  y[y < (A - 1.5 * spread)] <- NA
+  y[y > (B + 1.5 * spread)] <- NA
+  return(y)
+}
+
+# application of function
+airquality$Ozone <- remove_outliers(airquality$Ozone)
+airquality$Solar.R <- remove_outliers(airquality$Solar.R)
+airquality$Wind <- remove_outliers(airquality$Wind)
+airquality$Temp <- remove_outliers(airquality$Temp)
+
+# 4 fill na again
+airquality$Ozone[is.na(airquality$Ozone)] <- mean(airquality$Ozone, na.rm = TRUE)
+airquality$Solar.R[is.na(airquality$Solar.R)] <- mean(airquality$Solar.R, na.rm = TRUE)
+airquality$Wind[is.na(airquality$Wind)] <- mean(airquality$Wind, na.rm = TRUE)
+airquality$Temp[is.na(airquality$Temp)] <- mean(airquality$Temp, na.rm = TRUE)
+
+par(mfrow = c(2, 2))
+boxplot(airquality$Ozone, main = "Boxplot for Ozone")
+boxplot(airquality$Solar.R, main = "Boxplot for Solar.R")
+boxplot(airquality$Wind, main = "Boxplot for Wind")
+boxplot(airquality$Temp, main = "Boxplot for Temp")
+par(mfrow = c(1, 1))
+
+# 1 descriptive stat fro ozone col
+mean_Ozone <- mean(airquality$Ozone, na.rm = TRUE)
+median_Ozone <- median(airquality$Ozone, na.rm = TRUE)
+sd_Ozone <- sd(airquality$Ozone, na.rm = TRUE)
+var_Ozone <- var(airquality$Ozone, na.rm = TRUE)
+iqr_Ozone <- IQR(airquality$Ozone, na.rm = TRUE)
+print(paste("ozone mean:", mean_Ozone, 
+            "ozone median:", median_Ozone, 
+            "ozone stand dev:", sd_Ozone, 
+            "ozone variance:", var_Ozone, 
+            "ozone interquartile range:", iqr_Ozone))
+par(mfrow = c(2, 2))
+hist(airquality$Ozone, main = "Histogram of ozone col", xlab = "Ozone", breaks = 20)
+plot(density(airquality$Ozone, na.rm = TRUE), main = "Density plt of ozone col", xlab = "Ozone")
+boxplot(airquality$Ozone, main = "Boxplt of ozone col", ylab = "Ozone")
+par(mfrow = c(1, 1))
+
+# 1 descriptive stat for solar col
+mean_Solar.R <- mean(airquality$Solar.R, na.rm = TRUE)
+median_Solar.R <- median(airquality$Solar.R, na.rm = TRUE)
+sd_Solar.R <- sd(airquality$Solar.R, na.rm = TRUE)
+var_Solar.R <- var(airquality$Solar.R, na.rm = TRUE)
+iqr_Solar.R <- IQR(airquality$Solar.R, na.rm = TRUE)
+print(paste("sol.r mean:", mean_Solar.R, 
+            "sol.r median:", median_Solar.R, 
+            "sol.r stand dev:", sd_Solar.R, 
+            "sol.r variance:",var_Solar.R, 
+            "sol.r interquartile range:", iqr_Solar.R))
+
+par(mfrow = c(2, 2))
+hist(airquality$Solar.R, main = "Hist of sol col", xlab = "Solar.R", breaks = 20)
+plot(density(airquality$Solar.R, na.rm = TRUE), main = "Density plt of solar col", xlab = "Solar.R")
+boxplot(airquality$Solar.R, main = "Boxplt of solar col", ylab = "Solar.R")
+par(mfrow = c(1, 1))
+
+# 1 descriptive stat for wind col
+mean_Wind <- mean(airquality$Wind, na.rm = TRUE)
+median_Wind <- median(airquality$Wind, na.rm = TRUE)
+sd_Wind <- sd(airquality$Wind, na.rm = TRUE)
+var_Wind <- var(airquality$Wind, na.rm = TRUE)
+iqr_Wind <- IQR(airquality$Wind, na.rm = TRUE)
+print(paste("wind mean:", mean_Wind, 
+            "wind median:", median_Wind, 
+            "wind stand dev:", sd_Wind, 
+            "wind variance:",var_Wind, 
+            "wind interquartile range:", iqr_Wind))
+
+par(mfrow = c(2, 2))
+hist(airquality$Wind, main = "Hist of wind col", xlab = "Wind", breaks = 20)
+plot(density(airquality$Wind, na.rm = TRUE), main = "Density plt of wind col", xlab = "Wind")
+boxplot(airquality$Wind, main = "Boxplot of wind col", ylab = "Wind")
+par(mfrow = c(1, 1))
+
+
+# 1 descriptive stat for temperature col
+mean_Temp <- mean(airquality$Temp, na.rm = TRUE)
+median_Temp <- median(airquality$Temp, na.rm = TRUE)
+sd_Temp <- sd(airquality$Temp, na.rm = TRUE)
+var_Temp <- var(airquality$Temp, na.rm = TRUE)
+iqr_Temp <- IQR(airquality$Temp, na.rm = TRUE)
+print(paste("temp mean:", mean_Temp, 
+            "temp median:", median_Temp, 
+            "temp stand dev:", sd_Temp, 
+            "temp variance:",var_Temp, 
+            "temp interquartile range:", iqr_Temp))
+par(mfrow = c(2, 2))
+hist(airquality$Temp, main = "Histogram of temp col", xlab = "Temp", breaks = 20)
+plot(density(airquality$Temp, na.rm = TRUE), main = "Density plt of temp col", xlab = "Temp")
+boxplot(airquality$Temp, main = "Boxplot of temp col", ylab = "Temp")
+print(paste("temp mean:", mean_Temp, 
+            "temp median:", median_Temp, 
+            "temp stand dev:", sd_Wind, 
+            "temp variance:",var_Temp, 
+            "temp interquartile range:", iqr_Temp))
+par(mfrow = c(1, 1))
+
+
+# data normalization
+normalize <- function(x) {
+  (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+
+airquality_normalized <- airquality
+airquality_normalized$Ozone <- normalize(airquality$Ozone)
+airquality_normalized$Solar.R <- normalize(airquality$Solar.R)
+airquality_normalized$Wind <- normalize(airquality$Wind)
+airquality_normalized$Temp <- normalize(airquality$Temp)
+
+# hist of normalized data 
+par(mfrow = c(2, 2))
+hist(airquality_normalized$Ozone, main = "Histogram of normalized ozone col", xlab = "Normalized 'Ozone'", breaks = 20)
+hist(airquality_normalized$Solar.R, main = "Histogram of normalized solar col", xlab = "Normalized 'Solar.R'", breaks = 20)
+hist(airquality_normalized$Wind, main = "Histogram of normalized wind col", xlab = "Normalized 'Wind'", breaks = 20)
+hist(airquality_normalized$Temp, main = "Histogram of normalized temp", xlab = "Normalized 'Temperature'", breaks = 20)
+par(mfrow = c(1, 1))
+
+# boxplots of norm data
+par(mfrow = c(2, 2))
+boxplot(airquality_normalized$Ozone, main = "Boxplot of normalized ozone col", ylab = "Normalized 'Ozone'")
+boxplot(airquality_normalized$Solar.R, main = "Boxplot of normalized solar col", ylab = "Normalized 'Solar.R'")
+boxplot(airquality_normalized$Wind, main = "Boxplot of normalized wind col", ylab = "Normalized 'Wind'")
+boxplot(airquality_normalized$Temp, main = "Boxplot of of normalized temp", ylab = "Normalized 'Temperature'")
+par(mfrow = c(1, 1))
+
+# matrix of norma data 
+cor_matrix_normalized <- cor(airquality_normalized[, c("Ozone", "Solar.R", "Wind", "Temp")], use = "complete.obs")
+print("Correlation matrix of normalized data:")
+print(cor_matrix_normalized)
+
+# scatter if norm by months
+par(mfrow = c(2, 2))
+plot(airquality_normalized$Ozone ~ airquality$Month, main = "Ozone by mth", xlab = "Month", ylab = "Normalized 'Ozone'")
+plot(airquality_normalized$Solar.R ~ airquality$Month, main = "Solar.R by mth", xlab = "Month", ylab = "Normalized 'Solar.R'")
+plot(airquality_normalized$Wind ~ airquality$Month, main = "Wind by mth", xlab = "Month", ylab = "'Normalized Wind'")
+plot(airquality_normalized$Temp ~ airquality$Month, main = "Temp by mth", xlab = "Month", ylab = "'Normalized Temp'")
+par(mfrow = c(1, 1))
+
+# trend line and scatter plots
+lm_ozone <- lm(Ozone ~ Month, data = airquality_normalized)
+lm_solar <- lm(Solar.R ~ Month, data = airquality_normalized)
+lm_wind <- lm(Wind ~ Month, data = airquality_normalized)
+lm_temp <- lm(Temp ~ Month, data = airquality_normalized)
+
+par(mfrow = c(2, 2))
+plot(airquality$Month, airquality_normalized$Ozone, main = "Trend of zone",
+     xlab = "Month", ylab = "Norm. ozone", pch = 16, col = "purple")
+abline(lm_ozone, col = "red", lwd = 2)
+plot(airquality$Month, airquality_normalized$Solar.R, main = "Trend of solar radiation",
+     xlab = "Month", ylab = "Norm. solar radiation", pch = 16, col = "purple")
+abline(lm_solar, col = "red", lwd = 2)
+plot(airquality$Month, airquality_normalized$Wind, main = "Trend of wind",
+     xlab = "Month", ylab = "Norm. wind speed", pch = 16, col = "purple")
+abline(lm_wind, col = "red", lwd = 2)
+plot(airquality$Month, airquality_normalized$Temp, main = "Trend of temperature",
+     xlab = "Month", ylab = "Norm. temperature", pch = 16, col = "purple")
+abline(lm_temp, col = "red", lwd = 2)
+par(mfrow = c(1, 1))
+
+
